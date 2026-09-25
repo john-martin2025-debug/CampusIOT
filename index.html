@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CampusIoT: Smart Campus Resource Monitoring</title>
+<meta name="description" content="CampusIoT, an IoT-based system for monitoring electricity and water use on campus. ESSE Group 3.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;800&family=Instrument+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="bar">
+  <a class="brand" href="#home" aria-label="CampusIoT home">
+    <svg viewBox="0 0 32 32" width="28" height="28" aria-hidden="true"><rect x="3" y="3" width="26" height="26" rx="6" style="fill:var(--petrol)"/><path d="M11 22V13l5-4 5 4v9" fill="none" style="stroke:var(--on-petrol)" stroke-width="2.2" stroke-linejoin="round"/><circle cx="16" cy="17" r="2.2" style="fill:var(--power)"/></svg>
+    <span>CampusIoT</span>
+  </a>
+  <button class="menu-btn" id="menuBtn" aria-expanded="false" aria-controls="nav">Menu</button>
+  <nav id="nav" aria-label="Main">
+    <a href="#home" data-link="home">Home</a>
+    <a href="#problem" data-link="problem">The problem</a>
+    <a href="#solution" data-link="solution">Our solution</a>
+    <a href="#monitor" data-link="monitor">Live monitor</a>
+    <a href="#report" data-link="report">Report an issue</a>
+    <a href="#references" data-link="references">References</a>
+  </nav>
+  <button class="theme-btn" id="themeBtn" aria-label="Switch to dark theme" title="Switch theme">
+    <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z" fill="currentColor"/></svg>
+  </button>
+</header>
+
+<main id="main">
+
+<!-- ============ HOME ============ -->
+<section class="screen" id="home" aria-labelledby="home-title">
+  <div class="hero">
+    <div class="hero-text">
+      <h1 id="home-title">Every empty room with the lights on is a meter still running.</h1>
+      <p class="lede">CampusIoT puts occupancy sensors and water flow meters in campus buildings, so wasted electricity and hidden leaks show up the moment they start, not when the monthly bill arrives.</p>
+      <div class="actions">
+        <a class="btn" href="#monitor">Open the live monitor</a>
+        <a class="btn ghost" href="#report">Report an issue</a>
+      </div>
+      <p class="small muted">Try the campus plan: tap any room to see its sensors, or switch on automatic cut-off and watch the waste drop.</p>
+    </div>
+
+    <div class="plan" aria-labelledby="plan-title">
+      <div class="plan-head">
+        <h2 id="plan-title">Campus right now</h2>
+        <span class="clock" id="simClock" aria-live="off">Simulated 09:00</span>
+      </div>
+      <div class="plan-stats" aria-live="polite">
+        <div><strong id="statPower">0.0</strong><span>kW wasted in empty rooms</span></div>
+        <div><strong id="statWater">0</strong><span>litres per hour leaking</span></div>
+        <div><strong id="statTotal">0.0</strong><span>kWh wasted since you opened this page</span></div>
+      </div>
+      <div class="blocks" id="blocks"></div>
+      <div class="legend" aria-hidden="true">
+        <span><i class="sw sw-ok"></i>In use</span>
+        <span><i class="sw sw-waste"></i>Empty, power on</span>
+        <span><i class="sw sw-off"></i>Off</span>
+        <span><i class="sw sw-leak"></i>Leak detected</span>
+      </div>
+      <label class="switch">
+        <input type="checkbox" id="autoCut">
+        <span class="track" aria-hidden="true"></span>
+        <span>Automatic cut-off for empty rooms</span>
+      </label>
+      <div class="room-detail" id="roomDetail" aria-live="polite">
+        <p class="muted">Select a room to see its sensor readings.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="strip">
+    <a class="strip-item" href="#problem">
+      <h3>The problem</h3>
+      <p>Lights and AC running in empty rooms, leaks nobody notices, and no central data to act on.</p>
+    </a>
+    <a class="strip-item" href="#solution">
+      <h3>Our solution</h3>
+      <p>ESP32 sensor nodes, occupancy sensors and flow meters feeding one dashboard that alerts the right people.</p>
+    </a>
+    <a class="strip-item" href="#report">
+      <h3>Estimate a loss</h3>
+      <p>Enter a place, problem and duration to see the water, energy, cost and CO₂ it wastes.</p>
+    </a>
+  </div>
+
+  <div class="team">
+    <h2>ESSE Group 3</h2>
+    <ul class="names">
+      <li>John Martin Lijo</li><li>Jose Christopher</li><li>Joseph Jimmy</li>
+      <li>Joseph Jyothish</li><li>Joseph Mathew</li><li>Joseph T Thayyil</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============ PROBLEM ============ -->
+<section class="screen" id="problem" aria-labelledby="problem-title" hidden>
+  <header class="page-head">
+    <h1 id="problem-title">Inefficient campus resource management</h1>
+    <p class="lede">Electricity and water on most campuses are checked by hand, if at all. By the time someone notices a problem, the waste has already happened.</p>
+  </header>
+
+  <h2>What goes wrong, and what it costs</h2>
+  <div class="pairs" role="table" aria-label="Problems and their impact">
+    <div class="pair-head" role="row"><span role="columnheader">Problem</span><span role="columnheader">Result</span></div>
+    <div class="pair" role="row"><span role="cell">Electricity and water use are not monitored.</span><span role="cell">Resources are wasted without anyone knowing.</span></div>
+    <div class="pair" role="row"><span role="cell">Lights and AC run in unoccupied rooms.</span><span role="cell">Operating costs go up.</span></div>
+    <div class="pair" role="row"><span role="cell">Water leaks can go undetected for days.</span><span role="cell">Higher environmental impact.</span></div>
+    <div class="pair" role="row"><span role="cell">Manual monitoring is slow and inconsistent.</span><span role="cell">Corrective action is delayed.</span></div>
+    <div class="pair" role="row"><span role="cell">There is no central, real-time resource data.</span><span role="cell">Decisions can't be based on data.</span></div>
+  </div>
+  <p class="need">What we need is a system that monitors campus resources continuously, spots inefficient use, and gets the information to someone who can fix it in time.</p>
+
+  <h2>Who it is for</h2>
+  <div class="users">
+    <article>
+      <h3>Students</h3>
+      <p>See how their block is doing and report a running tap or an empty lit room from their phone.</p>
+    </article>
+    <article>
+      <h3>Faculty</h3>
+      <p>Rooms power down on their own after class, and problems can be flagged without filling in paperwork.</p>
+    </article>
+    <article>
+      <h3>Facility managers</h3>
+      <p>Get alerts with the exact location and estimated loss, so the worst problems get fixed first.</p>
+    </article>
+    <article>
+      <h3>Administration</h3>
+      <p>Get consumption records for budgeting and for environmental audits under ISO 14001.</p>
+    </article>
+  </div>
+
+  <h2>How it supports sustainability goals</h2>
+  <div class="goals">
+    <article class="goal g-energy">
+      <h3>SDG 7: Affordable and clean energy</h3>
+      <p>Promotes efficient energy use and cuts unnecessary electricity consumption.</p>
+    </article>
+    <article class="goal g-consume">
+      <h3>SDG 12: Responsible consumption and production</h3>
+      <p>Encourages efficient use of resources and reduces waste.</p>
+    </article>
+    <article class="goal g-iso">
+      <h3>ISO 14001: Environmental management</h3>
+      <p>Supports systematic monitoring and helps improve environmental performance over time.</p>
+    </article>
+  </div>
+  <p class="chain" aria-label="Overall goal">
+    <span>Efficient resource management</span><span class="arrow" aria-hidden="true"></span>
+    <span>Less wastage</span><span class="arrow" aria-hidden="true"></span>
+    <span>Lower environmental impact</span>
+  </p>
+</section>
+
+<!-- ============ SOLUTION ============ -->
+<section class="screen" id="solution" aria-labelledby="solution-title" hidden>
+  <header class="page-head">
+    <h1 id="solution-title">IoT-based predictive resource allocation</h1>
+    <p class="lede">We compared six approaches and chose Solution 4: a network of low-cost sensor nodes that watches occupancy, power and water flow in every monitored room and acts on what it finds.</p>
+  </header>
+
+  <div class="two-col">
+    <div>
+      <h2>Core objective</h2>
+      <p>To deploy an IoT-based predictive resource allocation system that automates campus utility management, eliminates phantom electrical loads and water leaks, and reduces the institution's carbon footprint.</p>
+    </div>
+    <div>
+      <h2>System scope</h2>
+      <p>Distributed ESP32 microcontrollers, passive infrared (PIR) occupancy sensors and digital flow meters replace error-prone manual audits with consistent, automated environmental monitoring in line with ISO 14001.</p>
+    </div>
+  </div>
+
+  <h2>How it works</h2>
+  <ol class="flow">
+    <li><h3>Sense</h3><p>A PIR sensor detects whether anyone is in the room. A current sensor measures the power drawn by lights, fans and AC. A flow meter on the water line measures litres per minute.</p></li>
+    <li><h3>Decide at the edge</h3><p>An ESP32 in each room reads the sensors every few seconds and checks for waste, such as power on with no motion for 10 minutes, or water flowing at 3 a.m.</p></li>
+    <li><h3>Send</h3><p>Readings travel over the campus Wi-Fi to a central server, which stores them as a time series for every room and zone.</p></li>
+    <li><h3>Analyse and predict</h3><p>The server compares each reading with that room's normal pattern, forecasts the day's usage, and flags anything unusual.</p></li>
+    <li><h3>Act</h3><p>A relay cuts power to empty rooms after a grace period. Leaks and faults are sent as alerts to the facility team with the location and estimated loss.</p></li>
+    <li><h3>Report</h3><p>The dashboard shows live and historical usage, and keeps records that support ISO 14001 audits.</p></li>
+  </ol>
+
+  <h2>Hardware in each node</h2>
+  <div class="table-wrap">
+    <table class="hw">
+      <thead><tr><th scope="col">Part</th><th scope="col">Example</th><th scope="col">What it does</th></tr></thead>
+      <tbody>
+        <tr><td>Microcontroller</td><td>ESP32 (built-in Wi-Fi)</td><td>Reads the sensors, runs the waste rules, sends data</td></tr>
+        <tr><td>Occupancy sensor</td><td>PIR module (e.g. HC-SR501)</td><td>Detects movement to tell if a room is in use</td></tr>
+        <tr><td>Water flow meter</td><td>Hall-effect flow sensor (e.g. YF-S201)</td><td>Measures flow, so leaks and overflows show up</td></tr>
+        <tr><td>Current sensor</td><td>Clip-on CT sensor (e.g. SCT-013)</td><td>Measures electricity used in the room</td></tr>
+        <tr><td>Relay module</td><td>5 V relay, rated for the room circuit</td><td>Switches lights and AC off when the room is empty</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="small muted">Part numbers are common examples for a prototype. A real installation would use certified, properly rated switching gear installed by an electrician.</p>
+
+  <h2>Why we chose it</h2>
+  <ul class="reasons">
+    <li>It has a simple, user-friendly design.</li>
+    <li>It uses precise sensor readings and calculations to give exact figures.</li>
+    <li>It reduces water and power waste by reporting issues as they happen.</li>
+  </ul>
+
+  <h2>The other options we compared</h2>
+  <div class="options">
+    <details><summary>Solution 1: Centralized resource data platform</summary><p>IoT sensors collect electricity, water, waste and occupancy data for selected facilities, and a web interface shows consumption patterns and unusual usage.</p></details>
+    <details><summary>Solution 2: Sensor alerts to responsible staff</summary><p>Smart sensors monitor electricity, water and classroom occupancy, and a web portal sends alerts by email, SMS and in-portal notification to faculty, staff and facility managers.</p></details>
+    <details><summary>Solution 3: Timed load-shedding</summary><p>Programmable digital timers and heavy-duty relays at the main distribution boards cut power at set times to stop after-hours energy waste.</p></details>
+    <details open><summary>Solution 4: IoT predictive resource allocation (selected)</summary><p>ESP32 nodes, PIR occupancy sensors and digital flow meters automate utility management and remove phantom loads and leaks. This website is built around it.</p></details>
+    <details><summary>Solution 5: Timetable-synced energy management</summary><p>ESP32 nodes linked to the university timetable switch off HVAC and lighting in unused rooms and sleep idle lab PCs, with an Eco-Token reward system for students.</p></details>
+    <details><summary>Solution 6: Campus resource-sharing portal</summary><p>A central inventory and portal lets departments and students list, reserve and transfer underused equipment, furniture and lab materials.</p></details>
+  </div>
+</section>
+
+<!-- ============ MONITOR ============ -->
+<section class="screen" id="monitor" aria-labelledby="monitor-title" hidden>
+  <header class="page-head">
+    <h1 id="monitor-title">Live monitor</h1>
+    <p class="lede">Hourly electricity and water use for each zone today. Readings well above a zone's normal pattern are marked in red and added to the alert list.</p>
+    <p class="small muted">This prototype uses simulated sensor data.</p>
+  </header>
+
+  <div class="controls">
+    <label>Zone
+      <select id="zoneSelect"></select>
+    </label>
+    <fieldset class="seg" aria-label="Show">
+      <label><input type="radio" name="metric" value="energy" checked><span>Electricity</span></label>
+      <label><input type="radio" name="metric" value="water"><span>Water</span></label>
+    </fieldset>
+    <button class="btn" id="pingBtn">Ping sensors</button>
+  </div>
+
+  <div class="monitor-grid">
+    <div class="chart-card">
+      <div class="chart-head">
+        <h2 id="chartTitle">Electricity, kWh per hour</h2>
+        <span class="small muted" id="pingTime"></span>
+      </div>
+      <div class="chart-wrap">
+        <svg id="chart" viewBox="0 0 720 300" role="img" aria-labelledby="chartTitle chartDesc"><desc id="chartDesc">Bar chart of hourly usage.</desc></svg>
+      </div>
+      <div class="chart-legend">
+        <span><i class="sw sw-bar"></i>Measured</span>
+        <span><i class="sw sw-line"></i>Normal pattern</span>
+        <span><i class="sw sw-anom"></i>Unusual reading</span>
+      </div>
+      <p class="bar-info" id="barInfo" aria-live="polite">Select a bar to see that hour's reading.</p>
+    </div>
+
+    <aside class="side">
+      <div class="kpis">
+        <div><span>Used so far today</span><strong id="kpiUsed">0</strong></div>
+        <div><span>Forecast for the day</span><strong id="kpiForecast">0</strong></div>
+        <div><span>Compared with a normal day</span><strong id="kpiDelta">0%</strong></div>
+      </div>
+      <h2 class="h3">Alerts</h2>
+      <ul class="alerts" id="alerts" aria-live="polite"></ul>
+    </aside>
+  </div>
+</section>
+
+<!-- ============ REPORT ============ -->
+<section class="screen" id="report" aria-labelledby="report-title" hidden>
+  <header class="page-head">
+    <h1 id="report-title">Report an issue</h1>
+    <p class="lede">Found a running tap or an empty room with the AC on? Enter it here to see how much it is wasting, then send it to maintenance.</p>
+  </header>
+
+  <div class="report-grid">
+    <form id="reportForm" class="form" novalidate>
+      <label>Place
+        <select id="place" required>
+          <option value="">Choose a place</option>
+        </select>
+      </label>
+      <label>What's wrong
+        <select id="issue" required>
+          <option value="">Choose a problem</option>
+        </select>
+      </label>
+      <label>For how many hours
+        <input id="hours" type="number" inputmode="decimal" min="0.25" max="720" step="0.25" placeholder="For example, 4" required>
+      </label>
+      <div class="rates">
+        <label>Electricity rate, ₹ per kWh
+          <input id="rateE" type="number" min="0" step="0.1" value="8">
+        </label>
+        <label>Water rate, ₹ per 1,000 L
+          <input id="rateW" type="number" min="0" step="1" value="50">
+        </label>
+      </div>
+      <p class="error" id="formError" role="alert"></p>
+      <button class="btn" type="submit">Estimate loss and send report</button>
+    </form>
+
+    <div class="result" id="result" aria-live="polite">
+      <p class="muted">Your estimate will appear here.</p>
+    </div>
+  </div>
+
+  <h2>Reports sent</h2>
+  <div class="table-wrap">
+    <table class="log">
+      <thead><tr><th scope="col">Time</th><th scope="col">Place</th><th scope="col">Problem</th><th scope="col">Hours</th><th scope="col">Estimated loss</th></tr></thead>
+      <tbody id="logBody"><tr class="empty"><td colspan="5">No reports yet. Send one using the form above.</td></tr></tbody>
+    </table>
+  </div>
+  <button class="link-btn" id="clearLog" type="button">Clear reports</button>
+
+  <h2>How the estimate is worked out</h2>
+  <div class="table-wrap">
+    <table class="hw" id="assumptions">
+      <thead><tr><th scope="col">Problem</th><th scope="col">Rate used</th><th scope="col">Basis</th></tr></thead>
+      <tbody></tbody>
+    </table>
+  </div>
+  <p class="small muted">CO₂ uses about 0.71 kg per kWh, the approximate average for India's grid from the Central Electricity Authority. Electricity and water rates are placeholders; change them to your campus's actual tariffs. All figures are estimates.</p>
+</section>
+
+<!-- ============ REFERENCES ============ -->
+<section class="screen" id="references" aria-labelledby="ref-title" hidden>
+  <header class="page-head">
+    <h1 id="ref-title">References</h1>
+    <p class="lede">Sources for the goals, standards, hardware and figures used on this site.</p>
+  </header>
+  <ol class="refs">
+    <li>ESSE Group 3 (2026). <em>Inefficient Campus Resource Management: Proposed Engineering &amp; IT Solutions for a Sustainable Campus</em> [Presentation].</li>
+    <li>United Nations. <em>Goal 7: Ensure access to affordable, reliable, sustainable and modern energy for all.</em> <a href="https://sdgs.un.org/goals/goal7" target="_blank" rel="noopener">sdgs.un.org/goals/goal7</a></li>
+    <li>United Nations. <em>Goal 12: Ensure sustainable consumption and production patterns.</em> <a href="https://sdgs.un.org/goals/goal12" target="_blank" rel="noopener">sdgs.un.org/goals/goal12</a></li>
+    <li>International Organization for Standardization. <em>ISO 14001: Environmental management systems.</em> <a href="https://www.iso.org/iso-14001-environmental-management.html" target="_blank" rel="noopener">iso.org</a></li>
+    <li>Espressif Systems. <em>ESP32 series SoC.</em> <a href="https://www.espressif.com/en/products/socs/esp32" target="_blank" rel="noopener">espressif.com</a></li>
+    <li>Adafruit Learning System. <em>PIR motion sensor guide.</em> <a href="https://learn.adafruit.com/pir-passive-infrared-proximity-motion-sensor" target="_blank" rel="noopener">learn.adafruit.com</a></li>
+    <li>U.S. Environmental Protection Agency, WaterSense. <em>Fix a Leak Week</em> (leak and drip water-loss figures). <a href="https://www.epa.gov/watersense/fix-leak-week" target="_blank" rel="noopener">epa.gov/watersense</a></li>
+    <li>Central Electricity Authority, Government of India. <em>CO₂ Baseline Database for the Indian Power Sector.</em> <a href="https://cea.nic.in/cdm-co2-baseline-database/" target="_blank" rel="noopener">cea.nic.in</a></li>
+    <li>Bureau of Energy Efficiency, Government of India. <em>Standards and labelling for air conditioners.</em> <a href="https://beeindia.gov.in/" target="_blank" rel="noopener">beeindia.gov.in</a></li>
+    <li>MQTT.org. <em>MQTT: The standard for IoT messaging.</em> <a href="https://mqtt.org/" target="_blank" rel="noopener">mqtt.org</a></li>
+    <li>Mozilla. <em>MDN Web Docs: HTML, CSS and JavaScript reference.</em> <a href="https://developer.mozilla.org/" target="_blank" rel="noopener">developer.mozilla.org</a></li>
+    <li>Google Fonts. <em>Big Shoulders Display</em> and <em>Instrument Sans</em> typefaces. <a href="https://fonts.google.com/" target="_blank" rel="noopener">fonts.google.com</a></li>
+  </ol>
+  <h2>Notes</h2>
+  <p>The sensor readings on the campus plan and live monitor are simulated in the browser to show how the system would behave. No real campus data is collected. The site is built with plain HTML, CSS and JavaScript and uses no frameworks.</p>
+</section>
+
+</main>
+
+<footer class="foot">
+  <p>CampusIoT, a prototype by ESSE Group 3 for a sustainable campus.</p>
+  <p class="small muted">Supports SDG 7, SDG 12 and ISO 14001. Sensor data on this site is simulated.</p>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>
